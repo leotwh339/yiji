@@ -4,7 +4,6 @@
     { label: '中階', maxId: 40, minutes: 4 },
     { label: '進階', maxId: 64, minutes: 5 }
   ];
-  const ODD_HEXAGRAM_BONUS = 1;
 
   const menuEl = document.getElementById('learnMenu');
   const contentEl = document.getElementById('learnContent');
@@ -25,17 +24,13 @@
     return text.replace(/。$/, '');
   }
 
-  function calculateLessonMinutes(hexId, baseMinutes) {
-    return baseMinutes + (hexId % 2 === 0 ? 0 : ODD_HEXAGRAM_BONUS);
-  }
-
   const unitList = HEXAGRAMS.map((hex) => {
     const stageRule = STAGE_RULES.find((rule) => hex.id <= rule.maxId) || STAGE_RULES[STAGE_RULES.length - 1];
     return {
       id: `hex-${hex.id}`,
       stage: stageRule.label,
       title: `第${hex.id}卦 ${hex.name}`,
-      minutes: calculateLessonMinutes(hex.id, stageRule.minutes),
+      minutes: stageRule.minutes,
       desc: hex.guaci_modern,
       hexId: hex.id
     };
@@ -71,16 +66,25 @@
   }
 
   function buildKeyPoints(hex) {
+    const name = escapeHtml(hex.name);
+    const upperTrigram = escapeHtml(hex.upperTrigram);
+    const lowerTrigram = escapeHtml(hex.lowerTrigram);
+    const nature = escapeHtml(hex.nature);
+    const guaci = escapeHtml(removeTrailingPeriod(hex.guaci));
+    const xiangzhuan = escapeHtml(hex.xiangzhuan);
+    const tags = escapeHtml(hex.tags.join('、'));
+    const symbols = escapeHtml(hex.symbols.join('、'));
     return [
-      `${hex.name}卦由上卦${hex.upperTrigram}、下卦${hex.lowerTrigram}組成，對應${hex.nature}之象。`,
-      `卦辭指出「${removeTrailingPeriod(hex.guaci)}」，學習時先掌握整體處境與行動原則。`,
-      `${hex.xiangzhuan} 可作為日常修身與判斷情勢的提醒。`,
-      `可結合標籤 ${hex.tags.join('、')} 與象徵 ${hex.symbols.join('、')} 來加深記憶。`
+      `${name}卦由上卦${upperTrigram}、下卦${lowerTrigram}組成，對應${nature}之象。`,
+      `卦辭指出「${guaci}」，學習時先掌握整體處境與行動原則。`,
+      `${xiangzhuan} 可作為日常修身與判斷情勢的提醒。`,
+      `可結合標籤 ${tags} 與象徵 ${symbols} 來加深記憶。`
     ];
   }
 
   function buildRelatedButton(label, hex) {
-    return `<button class="btn secondary related-btn" data-hex-id="${escapeHtml(hex.id)}">${escapeHtml(label)}：第${escapeHtml(hex.id)}卦 ${escapeHtml(hex.name)}</button>`;
+    const escapedId = escapeHtml(hex.id);
+    return `<button class="btn secondary related-btn" data-hex-id="${escapedId}">${escapeHtml(label)}：第${escapedId}卦 ${escapeHtml(hex.name)}</button>`;
   }
 
   function renderMenu() {
@@ -132,7 +136,7 @@
         <article class="lesson-card">
           <h3>學習重點</h3>
           <ol class="lesson-list">
-            ${keyPoints.map((point) => `<li>${escapeHtml(point)}</li>`).join('')}
+            ${keyPoints.map((point) => `<li>${point}</li>`).join('')}
           </ol>
         </article>
       </div>
