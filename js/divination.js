@@ -5,12 +5,27 @@
     yarrow: document.getElementById('yarrowTab')
   };
 
-  tabs.forEach((tab) => {
+  tabs.forEach((tab, index) => {
+    tab.setAttribute('role', 'tab');
+    tab.setAttribute('tabindex', tab.classList.contains('active') ? '0' : '-1');
+    tab.setAttribute('aria-selected', tab.classList.contains('active') ? 'true' : 'false');
     tab.addEventListener('click', () => {
       tabs.forEach((t) => t.classList.remove('active'));
       tab.classList.add('active');
       Object.values(panels).forEach((p) => p.classList.remove('active'));
       panels[tab.dataset.tab].classList.add('active');
+      tabs.forEach((t) => {
+        t.setAttribute('aria-selected', t.classList.contains('active') ? 'true' : 'false');
+        t.setAttribute('tabindex', t.classList.contains('active') ? '0' : '-1');
+      });
+    });
+    tab.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+      event.preventDefault();
+      const delta = event.key === 'ArrowRight' ? 1 : -1;
+      const nextIndex = (index + delta + tabs.length) % tabs.length;
+      tabs[nextIndex].focus();
+      tabs[nextIndex].click();
     });
   });
 
@@ -94,26 +109,48 @@
     document.getElementById('mainHexName').textContent = `本卦：第${main.id}卦 ${main.name}`;
     document.getElementById('changedHexName').textContent = `之卦：第${changeHex.id}卦 ${changeHex.name}`;
 
-    const movingHtml = moving.length
-      ? moving
-          .map((i) => {
-            const y = main.yaoci[i];
-            return `<li><strong>${y.yao}</strong>：${y.text}<br/>白話：${y.modern}</li>`;
-          })
-          .join('')
-      : '<li>本次無動爻，宜守正待時。</li>';
-
     const qType = document.getElementById('questionType').value;
-    document.getElementById('resultText').innerHTML = `
-      <h3>${main.name}卦</h3>
-      <p><strong>卦辭：</strong>${main.guaci}</p>
-      <p><strong>白話：</strong>${main.guaci_modern}</p>
-      <p><strong>彖傳：</strong>${main.tuanzhuan}</p>
-      <p><strong>大象：</strong>${main.xiangzhuan}</p>
-      <h4>動爻解讀</h4>
-      <ol>${movingHtml}</ol>
-      <p><strong>${qType}建議：</strong>${adviceByType(qType)}</p>
-    `;
+    const resultRoot = document.getElementById('resultText');
+    resultRoot.innerHTML = '';
+
+    const title = document.createElement('h3');
+    title.textContent = `${main.name}卦`;
+    resultRoot.appendChild(title);
+
+    function appendParagraph(label, text) {
+      const p = document.createElement('p');
+      const strong = document.createElement('strong');
+      strong.textContent = `${label}：`;
+      p.appendChild(strong);
+      p.append(text);
+      resultRoot.appendChild(p);
+    }
+
+    appendParagraph('卦辭', main.guaci);
+    appendParagraph('白話', main.guaci_modern);
+    appendParagraph('彖傳', main.tuanzhuan);
+    appendParagraph('大象', main.xiangzhuan);
+
+    const movingTitle = document.createElement('h4');
+    movingTitle.textContent = '動爻解讀';
+    resultRoot.appendChild(movingTitle);
+
+    const list = document.createElement('ol');
+    if (moving.length) {
+      moving.forEach((i) => {
+        const y = main.yaoci[i];
+        const li = document.createElement('li');
+        li.textContent = `${y.yao}：${y.text} 白話：${y.modern}`;
+        list.appendChild(li);
+      });
+    } else {
+      const li = document.createElement('li');
+      li.textContent = '本次無動爻，宜守正待時。';
+      list.appendChild(li);
+    }
+    resultRoot.appendChild(list);
+
+    appendParagraph(`${qType}建議`, adviceByType(qType));
   }
 
   coinBtn.addEventListener('click', () => {

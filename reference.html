@@ -27,9 +27,9 @@
     <aside class="side-panel">
       <h1>64卦索引</h1>
       <input id="searchInput" type="search" placeholder="輸入卦名或關鍵詞" />
-      <div class="tabs compact">
-        <button class="tab active" data-filter="all">全部</button>
-        <button class="tab" data-filter="fav">已收藏的卦</button>
+      <div class="tabs compact" role="tablist" aria-label="查閱篩選">
+        <button class="tab active" data-filter="all" role="tab" aria-selected="true">全部</button>
+        <button class="tab" data-filter="fav" role="tab" aria-selected="false">已收藏的卦</button>
       </div>
       <ul id="referenceList" class="menu-list scroll"></ul>
     </aside>

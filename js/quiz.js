@@ -141,15 +141,20 @@
     if (value === q.answer) {
       state.score += 10;
       btn.classList.add('correct');
+      btn.textContent = `${btn.textContent}（正確）`;
       feedbackEl.textContent = `✅ 答對！${q.explain}`;
     } else {
       state.weak[q.type] += 1;
       btn.classList.add('wrong');
+      btn.textContent = `${btn.textContent}（錯誤）`;
       const rightBtn = buttons.find((b) => {
         const id = q.options.find((opt) => opt.text === b.textContent)?.value;
         return id === q.answer;
       });
-      if (rightBtn) rightBtn.classList.add('correct');
+      if (rightBtn) {
+        rightBtn.classList.add('correct');
+        rightBtn.textContent = `${rightBtn.textContent}（正確）`;
+      }
       feedbackEl.textContent = `❌ 答錯。${q.explain}`;
     }
 

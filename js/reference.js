@@ -93,12 +93,26 @@
     });
   }
 
-  tabs.forEach((tab) => {
+  tabs.forEach((tab, index) => {
+    tab.setAttribute('tabindex', tab.classList.contains('active') ? '0' : '-1');
+    tab.setAttribute('aria-selected', tab.classList.contains('active') ? 'true' : 'false');
     tab.addEventListener('click', () => {
       tabs.forEach((t) => t.classList.remove('active'));
       tab.classList.add('active');
       filterMode = tab.dataset.filter;
+      tabs.forEach((t) => {
+        t.setAttribute('aria-selected', t.classList.contains('active') ? 'true' : 'false');
+        t.setAttribute('tabindex', t.classList.contains('active') ? '0' : '-1');
+      });
       renderList();
+    });
+    tab.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+      event.preventDefault();
+      const delta = event.key === 'ArrowRight' ? 1 : -1;
+      const nextIndex = (index + delta + tabs.length) % tabs.length;
+      tabs[nextIndex].focus();
+      tabs[nextIndex].click();
     });
   });
 

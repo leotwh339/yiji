@@ -44,18 +44,18 @@
     </section>
 
     <section class="panel">
-      <div class="tabs">
-        <button class="tab active" data-tab="coin">銅錢法</button>
-        <button class="tab" data-tab="yarrow">蓍草法</button>
+      <div class="tabs" role="tablist" aria-label="算卦方式">
+        <button class="tab active" data-tab="coin" role="tab" aria-selected="true">銅錢法</button>
+        <button class="tab" data-tab="yarrow" role="tab" aria-selected="false">蓍草法</button>
       </div>
 
-      <div id="coinTab" class="tab-panel active">
+      <div id="coinTab" class="tab-panel active" role="tabpanel">
         <div class="coin-row" id="coinArea"></div>
         <button class="btn" id="coinThrowBtn">搖卦（第 1 次）</button>
         <ol id="coinLog" class="line-log"></ol>
       </div>
 
-      <div id="yarrowTab" class="tab-panel">
+      <div id="yarrowTab" class="tab-panel" role="tabpanel">
         <h3>蓍草法七步演示（每次得一爻）</h3>
         <div id="yarrowStep" class="step-box"></div>
         <button class="btn" id="yarrowNextBtn">下一步</button>
