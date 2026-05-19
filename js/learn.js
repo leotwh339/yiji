@@ -4,11 +4,30 @@
     { label: '中階', maxId: 40, minutes: 4 },
     { label: '進階', maxId: 64, minutes: 5 }
   ];
+  const ALTERNATE_MINUTE_BONUS = 1;
 
   const menuEl = document.getElementById('learnMenu');
   const contentEl = document.getElementById('learnContent');
   const progressText = document.getElementById('progressText');
   const progressFill = document.getElementById('progressFill');
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      '\'': '&#39;'
+    }[char]));
+  }
+
+  function removeTrailingPeriod(text) {
+    return text.replace(/。$/, '');
+  }
+
+  function getLessonMinutes(hexId, baseMinutes) {
+    return baseMinutes + (hexId % 2 === 0 ? 0 : ALTERNATE_MINUTE_BONUS);
+  }
 
   const unitList = HEXAGRAMS.map((hex) => {
     const stageRule = STAGE_RULES.find((rule) => hex.id <= rule.maxId) || STAGE_RULES[STAGE_RULES.length - 1];
@@ -16,7 +35,7 @@
       id: `hex-${hex.id}`,
       stage: stageRule.label,
       title: `第${hex.id}卦 ${hex.name}`,
-      minutes: stageRule.minutes + (hex.id % 2),
+      minutes: getLessonMinutes(hex.id, stageRule.minutes),
       desc: hex.guaci_modern,
       hexId: hex.id
     };
@@ -54,7 +73,7 @@
   function buildKeyPoints(hex) {
     return [
       `${hex.name}卦由上卦${hex.upperTrigram}、下卦${hex.lowerTrigram}組成，對應${hex.nature}之象。`,
-      `卦辭指出「${hex.guaci.replace(/。$/, '')}」，學習時先掌握整體處境與行動原則。`,
+      `卦辭指出「${removeTrailingPeriod(hex.guaci)}」，學習時先掌握整體處境與行動原則。`,
       `${hex.xiangzhuan} 可作為日常修身與判斷情勢的提醒。`,
       `可結合標籤 ${hex.tags.join('、')} 與象徵 ${hex.symbols.join('、')} 來加深記憶。`
     ];
@@ -87,10 +106,10 @@
     contentEl.innerHTML = `
       <div class="lesson-head">
         <div>
-          <p class="eyebrow">${unit.stage}課程</p>
-          <h2>${unit.title} ${hex.unicode}</h2>
+          <p class="eyebrow">${escapeHtml(unit.stage)}課程</p>
+          <h2>${escapeHtml(unit.title)} ${escapeHtml(hex.unicode)}</h2>
           <p><strong>預計時間：</strong>${unit.minutes} 分鐘</p>
-          <p>${unit.desc}</p>
+          <p>${escapeHtml(unit.desc)}</p>
         </div>
         <div id="learnHex" class="hex-svg lesson-hex"></div>
       </div>
@@ -99,33 +118,33 @@
         <article class="lesson-card">
           <h3>卦象速覽</h3>
           <ul class="lesson-list">
-            <li><strong>上卦：</strong>${hex.upperTrigram}</li>
-            <li><strong>下卦：</strong>${hex.lowerTrigram}</li>
-            <li><strong>自然之象：</strong>${hex.nature}</li>
-            <li><strong>五行：</strong>${hex.element}</li>
-            <li><strong>象徵：</strong>${hex.symbols.join('、')}</li>
+            <li><strong>上卦：</strong>${escapeHtml(hex.upperTrigram)}</li>
+            <li><strong>下卦：</strong>${escapeHtml(hex.lowerTrigram)}</li>
+            <li><strong>自然之象：</strong>${escapeHtml(hex.nature)}</li>
+            <li><strong>五行：</strong>${escapeHtml(hex.element)}</li>
+            <li><strong>象徵：</strong>${escapeHtml(hex.symbols.join('、'))}</li>
           </ul>
         </article>
         <article class="lesson-card">
           <h3>學習重點</h3>
           <ol class="lesson-list">
-            ${keyPoints.map((point) => `<li>${point}</li>`).join('')}
+            ${keyPoints.map((point) => `<li>${escapeHtml(point)}</li>`).join('')}
           </ol>
         </article>
       </div>
 
       <article class="lesson-card">
         <h3>原文與白話</h3>
-        <p><strong>卦辭：</strong>${hex.guaci}</p>
-        <p><strong>白話：</strong>${hex.guaci_modern}</p>
-        <p><strong>彖傳：</strong>${hex.tuanzhuan}</p>
-        <p><strong>象傳：</strong>${hex.xiangzhuan}</p>
+        <p><strong>卦辭：</strong>${escapeHtml(hex.guaci)}</p>
+        <p><strong>白話：</strong>${escapeHtml(hex.guaci_modern)}</p>
+        <p><strong>彖傳：</strong>${escapeHtml(hex.tuanzhuan)}</p>
+        <p><strong>象傳：</strong>${escapeHtml(hex.xiangzhuan)}</p>
       </article>
 
       <article class="lesson-card">
         <h3>六爻學習提示</h3>
         <ol class="lesson-list yao-list">
-          ${hex.yaoci.map((item) => `<li><strong>${item.yao}</strong> ${item.text}<br />白話：${item.modern}</li>`).join('')}
+          ${hex.yaoci.map((item) => `<li><strong>${escapeHtml(item.yao)}</strong> ${escapeHtml(item.text)}<br />白話：${escapeHtml(item.modern)}</li>`).join('')}
         </ol>
       </article>
 
@@ -133,14 +152,14 @@
         <article class="lesson-card">
           <h3>延伸記憶</h3>
           <div class="badge-row">
-            ${hex.tags.map((tag) => `<span class="badge">${tag}</span>`).join('')}
+            ${hex.tags.map((tag) => `<span class="badge">${escapeHtml(tag)}</span>`).join('')}
           </div>
         </article>
         <article class="lesson-card">
           <h3>相關卦象</h3>
           <div class="related-links">
-            ${related.opposite ? `<button class="btn secondary related-btn" data-hex-id="${related.opposite.id}">錯卦：第${related.opposite.id}卦 ${related.opposite.name}</button>` : ''}
-            ${related.reversed ? `<button class="btn secondary related-btn" data-hex-id="${related.reversed.id}">綜卦：第${related.reversed.id}卦 ${related.reversed.name}</button>` : ''}
+            ${related.opposite ? `<button class="btn secondary related-btn" data-hex-id="${related.opposite.id}">錯卦：第${related.opposite.id}卦 ${escapeHtml(related.opposite.name)}</button>` : ''}
+            ${related.reversed ? `<button class="btn secondary related-btn" data-hex-id="${related.reversed.id}">綜卦：第${related.reversed.id}卦 ${escapeHtml(related.reversed.name)}</button>` : ''}
           </div>
         </article>
       </div>
