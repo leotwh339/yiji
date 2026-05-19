@@ -25,7 +25,7 @@
     return text.replace(/。$/, '');
   }
 
-  function getLessonMinutes(hexId, baseMinutes) {
+  function calculateLessonMinutes(hexId, baseMinutes) {
     return baseMinutes + (hexId % 2 === 0 ? 0 : ALTERNATE_MINUTE_BONUS);
   }
 
@@ -35,7 +35,7 @@
       id: `hex-${hex.id}`,
       stage: stageRule.label,
       title: `第${hex.id}卦 ${hex.name}`,
-      minutes: getLessonMinutes(hex.id, stageRule.minutes),
+      minutes: calculateLessonMinutes(hex.id, stageRule.minutes),
       desc: hex.guaci_modern,
       hexId: hex.id
     };
@@ -158,8 +158,8 @@
         <article class="lesson-card">
           <h3>相關卦象</h3>
           <div class="related-links">
-            ${related.opposite ? `<button class="btn secondary related-btn" data-hex-id="${related.opposite.id}">錯卦：第${related.opposite.id}卦 ${escapeHtml(related.opposite.name)}</button>` : ''}
-            ${related.reversed ? `<button class="btn secondary related-btn" data-hex-id="${related.reversed.id}">綜卦：第${related.reversed.id}卦 ${escapeHtml(related.reversed.name)}</button>` : ''}
+            ${related.opposite ? `<button class="btn secondary related-btn" data-hex-id="${escapeHtml(related.opposite.id)}">錯卦：第${escapeHtml(related.opposite.id)}卦 ${escapeHtml(related.opposite.name)}</button>` : ''}
+            ${related.reversed ? `<button class="btn secondary related-btn" data-hex-id="${escapeHtml(related.reversed.id)}">綜卦：第${escapeHtml(related.reversed.id)}卦 ${escapeHtml(related.reversed.name)}</button>` : ''}
           </div>
         </article>
       </div>
