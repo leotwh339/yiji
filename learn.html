@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>學習區｜易經互動學習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html">易經互動學習</a>
+      <nav class="site-nav">
+        <a class="active" href="learn.html">學習區</a>
+        <a href="interact.html">互動區</a>
+        <a href="quiz.html">小測驗</a>
+        <a href="reference.html">資料查閱</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container split-layout">
+    <aside class="side-panel">
+      <h2>課程目錄</h2>
+      <ul id="learnMenu" class="menu-list"></ul>
+      <div class="progress-wrap">
+        <div class="progress-head">學習進度：<span id="progressText">0 / 64</span></div>
+        <div class="progress-bar"><span id="progressFill"></span></div>
+      </div>
+    </aside>
+    <section class="content-panel" id="learnContent"></section>
+  </main>
+
+  <footer class="site-footer">© 2026 易經互動學習網頁</footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/hexagram.js"></script>
+  <script src="js/learn.js"></script>
+</body>
+</html>

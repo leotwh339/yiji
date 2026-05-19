@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>易經互動學習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html">易經互動學習</a>
+      <nav class="site-nav">
+        <a href="learn.html">學習區</a>
+        <a href="interact.html">互動區</a>
+        <a href="quiz.html">小測驗</a>
+        <a href="reference.html">資料查閱</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>易經互動學習</h1>
+      <p>探索天地之道，啟迪生命智慧</p>
+    </section>
+
+    <section class="card-grid">
+      <article class="feature-card">
+        <i class="fa-solid fa-book-open icon"></i>
+        <h2>學習區</h2>
+        <p>以 1-5 分鐘微學習單元，循序掌握陰陽、八卦與六十四卦。</p>
+        <a class="btn" href="learn.html">進入</a>
+      </article>
+      <article class="feature-card">
+        <i class="fa-solid fa-yin-yang icon"></i>
+        <h2>互動區</h2>
+        <p>透過銅錢法與蓍草法起卦，理解本卦、動爻與之卦。</p>
+        <a class="btn" href="interact.html">進入</a>
+      </article>
+      <article class="feature-card">
+        <i class="fa-solid fa-pen-to-square icon"></i>
+        <h2>小測驗區</h2>
+        <p>認卦、配對、填充與情境題，檢核學習成果並累積成就。</p>
+        <a class="btn" href="quiz.html">進入</a>
+      </article>
+      <article class="feature-card">
+        <i class="fa-solid fa-scroll icon"></i>
+        <h2>資料查閱區</h2>
+        <p>快速搜尋 64 卦完整資料，收藏常用卦象，延伸查閱。</p>
+        <a class="btn" href="reference.html">進入</a>
+      </article>
+    </section>
+
+    <section class="daily-card">
+      <h2>今日卦象</h2>
+      <div id="dailyHexagram" class="daily-content"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">© 2026 易經互動學習網頁</footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/hexagram.js"></script>
+  <script>
+    (function () {
+      const root = document.getElementById('dailyHexagram');
+      const dayIndex = Math.floor((Date.now() / 86400000)) % HEXAGRAMS.length;
+      const hex = HEXAGRAMS[dayIndex];
+      root.innerHTML = `
+        <div id="dailyHexSvg" class="hex-svg"></div>
+        <div>
+          <h3>第${hex.id}卦 ${hex.name} ${hex.unicode}</h3>
+          <p>${hex.guaci}</p>
+          <p>${hex.guaci_modern}</p>
+        </div>
+      `;
+      drawHexagram(hex.binary, 'dailyHexSvg', 130, true);
+    })();
+  </script>
+</body>
+</html>
