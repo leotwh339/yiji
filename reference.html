@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>資料查閱區｜易經互動學習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html">易經互動學習</a>
+      <nav class="site-nav">
+        <a href="learn.html">學習區</a>
+        <a href="interact.html">互動區</a>
+        <a href="quiz.html">小測驗</a>
+        <a class="active" href="reference.html">資料查閱</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container split-layout">
+    <aside class="side-panel">
+      <h1>64卦索引</h1>
+      <input id="searchInput" type="search" placeholder="輸入卦名或關鍵詞" />
+      <div class="tabs compact" role="tablist" aria-label="查閱篩選">
+        <button class="tab active" data-filter="all" role="tab" aria-selected="true">全部</button>
+        <button class="tab" data-filter="fav" role="tab" aria-selected="false">已收藏的卦</button>
+      </div>
+      <ul id="referenceList" class="menu-list scroll"></ul>
+    </aside>
+
+    <section class="content-panel" id="referenceDetail"></section>
+  </main>
+
+  <footer class="site-footer">© 2026 易經互動學習網頁</footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/hexagram.js"></script>
+  <script src="js/reference.js"></script>
+</body>
+</html>

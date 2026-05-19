@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>互動區｜易經互動學習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html">易經互動學習</a>
+      <nav class="site-nav">
+        <a href="learn.html">學習區</a>
+        <a class="active" href="interact.html">互動區</a>
+        <a href="quiz.html">小測驗</a>
+        <a href="reference.html">資料查閱</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <h1>互動算卦</h1>
+      <div class="field-row">
+        <label>問題類型
+          <select id="questionType">
+            <option>事業</option>
+            <option>感情</option>
+            <option>學業</option>
+            <option>健康</option>
+            <option>財運</option>
+            <option>其他</option>
+          </select>
+        </label>
+      </div>
+      <label>問題內容
+        <textarea id="questionText" rows="3" placeholder="請靜心輸入你的問題"></textarea>
+      </label>
+    </section>
+
+    <section class="panel">
+      <div class="tabs" role="tablist" aria-label="算卦方式">
+        <button class="tab active" data-tab="coin" role="tab" aria-selected="true">銅錢法</button>
+        <button class="tab" data-tab="yarrow" role="tab" aria-selected="false">蓍草法</button>
+      </div>
+
+      <div id="coinTab" class="tab-panel active" role="tabpanel">
+        <div class="coin-row" id="coinArea"></div>
+        <button class="btn" id="coinThrowBtn">搖卦（第 1 次）</button>
+        <ol id="coinLog" class="line-log"></ol>
+      </div>
+
+      <div id="yarrowTab" class="tab-panel" role="tabpanel">
+        <h3>蓍草法七步演示（每次得一爻）</h3>
+        <div id="yarrowStep" class="step-box"></div>
+        <button class="btn" id="yarrowNextBtn">下一步</button>
+        <ol id="yarrowLog" class="line-log"></ol>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="resultPanel">
+      <h2>卦象解析</h2>
+      <div class="result-grid">
+        <div>
+          <div id="mainHex" class="hex-svg"></div>
+          <p id="mainHexName"></p>
+        </div>
+        <div>
+          <div id="changedHex" class="hex-svg"></div>
+          <p id="changedHexName"></p>
+        </div>
+      </div>
+      <div id="resultText"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">© 2026 易經互動學習網頁</footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/hexagram.js"></script>
+  <script src="js/divination.js"></script>
+</body>
+</html>

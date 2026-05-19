@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小測驗區｜易經互動學習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html">易經互動學習</a>
+      <nav class="site-nav">
+        <a href="learn.html">學習區</a>
+        <a href="interact.html">互動區</a>
+        <a class="active" href="quiz.html">小測驗</a>
+        <a href="reference.html">資料查閱</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <h1>小測驗區</h1>
+      <div class="difficulty-row">
+        <button class="difficulty active" data-level="beginner">🟢 入門</button>
+        <button class="difficulty" data-level="intermediate">🟡 進階</button>
+        <button class="difficulty" data-level="challenge">🔴 挑戰</button>
+      </div>
+      <button class="btn" id="startQuizBtn">開始 10 題測驗</button>
+      <p>最高分：<span id="bestScore">0</span></p>
+      <div id="badges" class="badge-row"></div>
+    </section>
+
+    <section class="panel hidden" id="quizPanel">
+      <h2 id="quizTitle"></h2>
+      <div id="quizQuestion"></div>
+      <div id="quizOptions" class="option-grid"></div>
+      <p id="quizFeedback"></p>
+      <button class="btn hidden" id="nextQuestionBtn">下一題</button>
+    </section>
+
+    <section class="panel hidden" id="quizResult"></section>
+  </main>
+
+  <footer class="site-footer">© 2026 易經互動學習網頁</footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/hexagram.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>
