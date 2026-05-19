@@ -20,7 +20,7 @@
     }[char]));
   }
 
-  function removeTrailingPeriod(text) {
+  function removeTrailingChinesePeriod(text) {
     return text.replace(/。$/, '');
   }
 
@@ -53,7 +53,7 @@
     progressFill.style.width = `${(count / 64) * 100}%`;
   }
 
-  function relatedHex(binary) {
+  function getRelatedHexagrams(binary) {
     const oppositeBinary = binary
       .split('')
       .map((bit) => (bit === '1' ? '0' : '1'))
@@ -70,7 +70,7 @@
     const upperTrigram = escapeHtml(hex.upperTrigram);
     const lowerTrigram = escapeHtml(hex.lowerTrigram);
     const nature = escapeHtml(hex.nature);
-    const guaci = escapeHtml(removeTrailingPeriod(hex.guaci));
+    const guaci = escapeHtml(removeTrailingChinesePeriod(hex.guaci));
     const xiangzhuan = escapeHtml(hex.xiangzhuan);
     const tags = escapeHtml(hex.tags.join('、'));
     const symbols = escapeHtml(hex.symbols.join('、'));
@@ -85,6 +85,10 @@
   function buildRelatedButton(label, hex) {
     const escapedId = escapeHtml(hex.id);
     return `<button class="btn secondary related-btn" data-hex-id="${escapedId}">${escapeHtml(label)}：第${escapedId}卦 ${escapeHtml(hex.name)}</button>`;
+  }
+
+  function buildYaociListItem(item) {
+    return `<li><p><strong>${escapeHtml(item.yao)}</strong> ${escapeHtml(item.text)}</p><p>白話：${escapeHtml(item.modern)}</p></li>`;
   }
 
   function renderMenu() {
@@ -108,7 +112,7 @@
   function renderContent() {
     const unit = unitList[currentIndex];
     const hex = HEXAGRAMS.find((item) => item.id === unit.hexId) || HEXAGRAMS[0];
-    const related = relatedHex(hex.binary);
+    const related = getRelatedHexagrams(hex.binary);
     const keyPoints = buildKeyPoints(hex);
 
     contentEl.innerHTML = `
@@ -152,7 +156,7 @@
       <article class="lesson-card">
         <h3>六爻學習提示</h3>
         <ol class="lesson-list yao-list">
-          ${hex.yaoci.map((item) => `<li><p><strong>${escapeHtml(item.yao)}</strong> ${escapeHtml(item.text)}</p><p>白話：${escapeHtml(item.modern)}</p></li>`).join('')}
+          ${hex.yaoci.map((item) => buildYaociListItem(item)).join('')}
         </ol>
       </article>
 
