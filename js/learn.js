@@ -4,7 +4,7 @@
     { label: '中階', maxId: 40, minutes: 4 },
     { label: '進階', maxId: 64, minutes: 5 }
   ];
-  const ALTERNATE_MINUTE_BONUS = 1;
+  const ODD_HEXAGRAM_BONUS = 1;
 
   const menuEl = document.getElementById('learnMenu');
   const contentEl = document.getElementById('learnContent');
@@ -26,7 +26,7 @@
   }
 
   function calculateLessonMinutes(hexId, baseMinutes) {
-    return baseMinutes + (hexId % 2 === 0 ? 0 : ALTERNATE_MINUTE_BONUS);
+    return baseMinutes + (hexId % 2 === 0 ? 0 : ODD_HEXAGRAM_BONUS);
   }
 
   const unitList = HEXAGRAMS.map((hex) => {
@@ -79,6 +79,10 @@
     ];
   }
 
+  function buildRelatedButton(label, hex) {
+    return `<button class="btn secondary related-btn" data-hex-id="${escapeHtml(hex.id)}">${escapeHtml(label)}：第${escapeHtml(hex.id)}卦 ${escapeHtml(hex.name)}</button>`;
+  }
+
   function renderMenu() {
     menuEl.innerHTML = '';
     unitList.forEach((unit, index) => {
@@ -86,7 +90,7 @@
       const btn = document.createElement('button');
       btn.className = index === currentIndex ? 'active' : '';
       const doneMark = doneUnits.has(unit.id) ? '✓ ' : '';
-      btn.textContent = `${doneMark}${unit.title}`;
+      btn.textContent = `${doneMark}${unit.stage}｜${unit.title}`;
       btn.addEventListener('click', () => {
         currentIndex = index;
         renderMenu();
@@ -144,7 +148,7 @@
       <article class="lesson-card">
         <h3>六爻學習提示</h3>
         <ol class="lesson-list yao-list">
-          ${hex.yaoci.map((item) => `<li><strong>${escapeHtml(item.yao)}</strong> ${escapeHtml(item.text)}<br />白話：${escapeHtml(item.modern)}</li>`).join('')}
+          ${hex.yaoci.map((item) => `<li><p><strong>${escapeHtml(item.yao)}</strong> ${escapeHtml(item.text)}</p><p>白話：${escapeHtml(item.modern)}</p></li>`).join('')}
         </ol>
       </article>
 
@@ -158,8 +162,8 @@
         <article class="lesson-card">
           <h3>相關卦象</h3>
           <div class="related-links">
-            ${related.opposite ? `<button class="btn secondary related-btn" data-hex-id="${escapeHtml(related.opposite.id)}">錯卦：第${escapeHtml(related.opposite.id)}卦 ${escapeHtml(related.opposite.name)}</button>` : ''}
-            ${related.reversed ? `<button class="btn secondary related-btn" data-hex-id="${escapeHtml(related.reversed.id)}">綜卦：第${escapeHtml(related.reversed.id)}卦 ${escapeHtml(related.reversed.name)}</button>` : ''}
+            ${related.opposite ? buildRelatedButton('錯卦', related.opposite) : ''}
+            ${related.reversed ? buildRelatedButton('綜卦', related.reversed) : ''}
           </div>
         </article>
       </div>
