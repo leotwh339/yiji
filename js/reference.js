@@ -120,16 +120,20 @@
       <div id="refHex" class="hex-svg"></div>
       <p><strong>卦辭：</strong>${hex.guaci}</p>
       <p><strong>白話：</strong>${hex.guaci_modern}</p>
-      <p><strong>彖傳：</strong>${hex.tuanzhuan}</p>
-      <p><strong>象傳（大象）：</strong>${hex.xiangzhuan}</p>
+      <p><strong>彖傳：</strong>${hex.tuanzhuan || '（本站暫未收錄，請見下方可靠學習資源）'}</p>
+      <p><strong>象傳（大象）：</strong>${hex.xiangzhuan || '（本站暫未收錄，請見下方可靠學習資源）'}</p>
       <h3>六爻爻辭</h3>
-      <ol>${hex.yaoci.map((y) => `<li><strong>${y.yao}</strong> ${y.text}<br/>白話：${y.modern}</li>`).join('')}</ol>
+      <ol>${hex.yaoci.map((y) => y.text ? `<li><strong>${y.yao}</strong> ${y.text}${y.modern ? `<br/>白話：${y.modern}` : ''}</li>` : '').join('') || '<li>（本站暫未收錄本卦六爻詳文，請對照《周易》原文）</li>'}</ol>
       <div class="related">
         <h3>相關卦象推薦</h3>
         <p>錯卦：${rel.opposite ? `第${rel.opposite.id}卦 ${rel.opposite.name}` : '—'}</p>
         <p>綜卦：${rel.reversed ? `第${rel.reversed.id}卦 ${rel.reversed.name}` : '—'}</p>
       </div>
       ${customBlock}
+      <div class="related">
+        <h3>可靠學習資源</h3>
+        <ul>${(LEARNING_RESOURCES||[]).map((r)=>`<li><a href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.title)}</a></li>`).join('')}</ul>
+      </div>
     `;
 
     drawHexagram(hex.binary, 'refHex', 140, true);

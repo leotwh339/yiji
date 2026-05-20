@@ -163,14 +163,14 @@
         <h3>原文與白話</h3>
         <p><strong>卦辭：</strong>${escapeHtml(hex.guaci)}</p>
         <p><strong>白話：</strong>${escapeHtml(hex.guaci_modern)}</p>
-        <p><strong>彖傳：</strong>${escapeHtml(hex.tuanzhuan)}</p>
-        <p><strong>象傳：</strong>${escapeHtml(hex.xiangzhuan)}</p>
+        <p><strong>彖傳：</strong>${hex.tuanzhuan ? escapeHtml(hex.tuanzhuan) : '（本站暫未收錄，請見下方可靠學習資源）'}</p>
+        <p><strong>象傳：</strong>${hex.xiangzhuan ? escapeHtml(hex.xiangzhuan) : '（本站暫未收錄，請見下方可靠學習資源）'}</p>
       </article>
 
       <article class="lesson-card">
         <h3>六爻學習提示</h3>
         <ol class="lesson-list yao-list">
-          ${hex.yaoci.map((item) => buildYaociListItem(item)).join('')}
+          ${hex.yaoci.map((item) => item.text ? buildYaociListItem(item) : '').join('') || '<li>（本站暫未收錄本卦六爻詳文，請對照《周易》原文）</li>'}
         </ol>
       </article>
 
@@ -191,6 +191,8 @@
           </div>
         </article>
       </div>
+
+      <article class="lesson-card"><h3>可靠學習資源</h3><ul class="lesson-list">${(LEARNING_RESOURCES||[]).map((r)=>`<li><a href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.title)}</a></li>`).join('')}</ul><p>建議以《周易》原文與註疏交叉閱讀，避免只依賴單一白話詮釋。</p></article>
 
       <div class="field-row">
         <button class="btn" id="markDoneBtn">${doneUnits.has(unit.id) ? '已標記完成' : '標記為已完成'}</button>
