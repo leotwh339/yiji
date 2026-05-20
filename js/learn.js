@@ -74,9 +74,13 @@
     const xiangzhuan = escapeHtml(hex.xiangzhuan);
     const tags = escapeHtml(hex.tags.join('、'));
     const symbols = escapeHtml(hex.symbols.join('、'));
+    const customTexts = JSON.parse(localStorage.getItem('hex_custom_texts') || '{}');
+    const hasCustomText = !!customTexts[hex.id];
     return [
       `${name}卦由上卦${upperTrigram}、下卦${lowerTrigram}組成，對應${nature}之象。`,
-      `卦辭指出「${guaci}」，學習時先掌握整體處境與行動原則。`,
+      hasCustomText
+        ? '你已上傳自訂文本，請以上傳文本為主要學習依據。'
+        : `卦辭指出「${guaci}」，學習時先掌握整體處境與行動原則。`,
       `${xiangzhuan} 可作為日常修身與判斷情勢的提醒。`,
       `可結合標籤 ${tags} 與象徵 ${symbols} 來加深記憶。`
     ];
@@ -114,6 +118,16 @@
     const hex = HEXAGRAMS.find((item) => item.id === unit.hexId) || HEXAGRAMS[0];
     const related = getRelatedHexagrams(hex.binary);
     const keyPoints = buildKeyPoints(hex);
+    const customTexts = JSON.parse(localStorage.getItem('hex_custom_texts') || '{}');
+    const ct = customTexts[hex.id];
+
+    const customTextCard = ct ? `
+      <article class="lesson-card custom-text-card">
+        <h3>自訂文本</h3>
+        <p class="custom-text-meta">📄 ${escapeHtml(ct.filename)}　上傳於 ${escapeHtml(ct.uploadedAt)}</p>
+        <pre class="custom-text-content">${escapeHtml(ct.content)}</pre>
+      </article>
+    ` : '';
 
     contentEl.innerHTML = `
       <div class="lesson-head">
@@ -159,6 +173,8 @@
           ${hex.yaoci.map((item) => buildYaociListItem(item)).join('')}
         </ol>
       </article>
+
+      ${customTextCard}
 
       <div class="lesson-grid">
         <article class="lesson-card">

@@ -10,7 +10,7 @@
     questions: [],
     index: 0,
     score: 0,
-    weak: { 認卦練習: 0, 卦辭配對: 0, 填充題: 0, 情境應用: 0 }
+    weak: { 認卦練習: 0, 卦辭配對: 0, 填充題: 0, 情境應用: 0, 文本理解: 0 }
   };
 
   const bestScoreEl = document.getElementById('bestScore');
@@ -103,9 +103,28 @@
     };
   }
 
+  function qCustomText(pool) {
+    const customTexts = JSON.parse(localStorage.getItem('hex_custom_texts') || '{}');
+    const hexesWithText = pool.filter((h) => customTexts[h.id]);
+    if (hexesWithText.length < 4) return null;
+    const correct = randomPick(hexesWithText, 1)[0];
+    const content = customTexts[correct.id].content;
+    const rawExcerpt = content.slice(0, 120) + (content.length > 120 ? '……' : '');
+    const safeExcerpt = rawExcerpt.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' }[c]));
+    return {
+      type: '文本理解',
+      prompt: `<p>以下為你上傳的自訂文本片段，請選出對應的卦名：</p><blockquote class="custom-excerpt">${safeExcerpt}</blockquote>`,
+      options: makeOptions(correct, pool),
+      answer: correct.id,
+      explain: `此文本屬於「${correct.name}」卦（第${correct.id}卦）。`
+    };
+  }
+
   function buildQuiz() {
     const pool = getPool();
     const generators = [qRecognize, qGuaci, qFill, qScenario];
+    const customQ = qCustomText(pool);
+    if (customQ) generators.push(() => customQ);
     const questions = [];
     for (let i = 0; i < 10; i += 1) {
       const gen = generators[i % generators.length];
@@ -194,7 +213,7 @@
     state.questions = buildQuiz();
     state.index = 0;
     state.score = 0;
-    state.weak = { 認卦練習: 0, 卦辭配對: 0, 填充題: 0, 情境應用: 0 };
+    state.weak = { 認卦練習: 0, 卦辭配對: 0, 填充題: 0, 情境應用: 0, 文本理解: 0 };
     quizResult.classList.add('hidden');
     quizPanel.classList.remove('hidden');
     renderQuestion();
