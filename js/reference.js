@@ -3,13 +3,32 @@
   const listEl = document.getElementById('referenceList');
   const detailEl = document.getElementById('referenceDetail');
   const tabs = document.querySelectorAll('.tab[data-filter]');
+  const fileInput = document.getElementById('customFileInput');
 
   let currentId = 1;
   let filterMode = 'all';
   let favorites = new Set(JSON.parse(localStorage.getItem('hex_favorites') || '[]'));
+  let customTexts = JSON.parse(localStorage.getItem('hex_custom_texts') || '{}');
 
   function saveFavorites() {
     localStorage.setItem('hex_favorites', JSON.stringify([...favorites]));
+  }
+
+  function saveCustomTexts() {
+    localStorage.setItem('hex_custom_texts', JSON.stringify(customTexts));
+  }
+
+  function showToast(message) {
+    const existing = document.querySelector('.upload-toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.className = 'upload-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('fade');
+      setTimeout(() => toast.remove(), 500);
+    }, 1500);
   }
 
   function matchKeyword(hex, keyword) {
@@ -20,8 +39,17 @@
   function getFiltered() {
     const keyword = searchInput.value.trim();
     return HEXAGRAMS.filter((hex) => {
-      const passFav = filterMode === 'all' ? true : favorites.has(hex.id);
-      return passFav && matchKeyword(hex, keyword);
+      let passFilter;
+      if (filterMode === 'all') {
+        passFilter = true;
+      } else if (filterMode === 'fav') {
+        passFilter = favorites.has(hex.id);
+      } else if (filterMode === 'custom') {
+        passFilter = !!customTexts[hex.id];
+      } else {
+        passFilter = true;
+      }
+      return passFilter && matchKeyword(hex, keyword);
     });
   }
 
@@ -60,9 +88,29 @@
     };
   }
 
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      '\'': '&#39;'
+    }[char]));
+  }
+
   function renderDetail() {
     const hex = HEXAGRAMS.find((h) => h.id === currentId) || HEXAGRAMS[0];
     const rel = relatedHex(hex.binary);
+    const ct = customTexts[hex.id];
+
+    const customBlock = ct ? `
+      <div class="custom-text-block">
+        <h3>自訂文本</h3>
+        <p class="custom-text-meta">📄 ${escapeHtml(ct.filename)}　上傳於 ${escapeHtml(ct.uploadedAt)}</p>
+        <pre class="custom-text-content">${escapeHtml(ct.content)}</pre>
+        <button class="btn secondary" id="deleteCustomTextBtn">🗑 刪除文本</button>
+      </div>
+    ` : '';
 
     detailEl.innerHTML = `
       <h2>第${hex.id}卦 ${hex.name} ${hex.unicode}</h2>
@@ -81,6 +129,7 @@
         <p>錯卦：${rel.opposite ? `第${rel.opposite.id}卦 ${rel.opposite.name}` : '—'}</p>
         <p>綜卦：${rel.reversed ? `第${rel.reversed.id}卦 ${rel.reversed.name}` : '—'}</p>
       </div>
+      ${customBlock}
     `;
 
     drawHexagram(hex.binary, 'refHex', 140, true);
@@ -91,7 +140,43 @@
       renderList();
       renderDetail();
     });
+
+    if (ct) {
+      document.getElementById('deleteCustomTextBtn').addEventListener('click', () => {
+        delete customTexts[hex.id];
+        saveCustomTexts();
+        renderList();
+        renderDetail();
+      });
+    }
   }
+
+  fileInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (customTexts[currentId]) {
+      const hex = HEXAGRAMS.find((h) => h.id === currentId) || HEXAGRAMS[0];
+      if (!confirm(`第 ${currentId} 卦「${hex.name}」已有文本，確定要覆蓋嗎？`)) {
+        fileInput.value = '';
+        return;
+      }
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const hex = HEXAGRAMS.find((h) => h.id === currentId) || HEXAGRAMS[0];
+      customTexts[currentId] = {
+        filename: file.name,
+        content: e.target.result,
+        uploadedAt: new Date().toLocaleString('zh-Hant')
+      };
+      saveCustomTexts();
+      renderList();
+      renderDetail();
+      showToast(`✅ 文本已上傳至第 ${currentId} 卦 ${hex.name}`);
+    };
+    reader.readAsText(file, 'UTF-8');
+    fileInput.value = '';
+  });
 
   tabs.forEach((tab, index) => {
     tab.setAttribute('tabindex', tab.classList.contains('active') ? '0' : '-1');

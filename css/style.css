@@ -155,6 +155,57 @@ textarea, select, input[type="search"], input[type="text"] {
 .related { margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px dashed rgba(26, 26, 46, 0.25); }
 .site-footer { text-align: center; padding: 1rem; margin-top: 1rem; color: #5b5b67; font-size: 0.9rem; }
 
+/* 自訂文本區塊 */
+.custom-text-block {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(26, 26, 46, 0.25);
+}
+.custom-text-meta {
+  font-size: 0.85rem;
+  color: #5b5b67;
+  margin-bottom: 0.4rem;
+}
+.custom-text-content {
+  background: rgba(245, 240, 232, 0.8);
+  border: 1px solid rgba(26, 26, 46, 0.12);
+  border-radius: 8px;
+  padding: 0.75rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.custom-text-card { border-left: 3px solid var(--gold); }
+.upload-row { margin-bottom: 0.6rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.upload-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  z-index: 999;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+.upload-toast.fade { opacity: 0; }
+blockquote.custom-excerpt {
+  background: rgba(201, 162, 39, 0.08);
+  border-left: 3px solid var(--gold);
+  padding: 0.5rem 0.75rem;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
 @media (max-width: 860px) {
   .split-layout { grid-template-columns: 1fr; }
   .lesson-head { grid-template-columns: 1fr; }
