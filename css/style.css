@@ -172,7 +172,7 @@ textarea, select, input[type="search"], input[type="text"] {
   border-radius: 8px;
   padding: 0.75rem;
   white-space: pre-wrap;
-  word-break: break-all;
+  overflow-wrap: break-word;
   font-family: 'Noto Serif TC', serif;
   font-size: 0.92rem;
   line-height: 1.7;
@@ -203,7 +203,7 @@ blockquote.custom-excerpt {
   margin: 0.5rem 0;
   font-size: 0.9rem;
   white-space: pre-wrap;
-  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 @media (max-width: 860px) {

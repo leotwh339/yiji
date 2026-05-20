@@ -109,10 +109,11 @@
     if (hexesWithText.length < 4) return null;
     const correct = randomPick(hexesWithText, 1)[0];
     const content = customTexts[correct.id].content;
-    const excerpt = content.slice(0, 120) + (content.length > 120 ? '……' : '');
+    const rawExcerpt = content.slice(0, 120) + (content.length > 120 ? '……' : '');
+    const safeExcerpt = rawExcerpt.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' }[c]));
     return {
       type: '文本理解',
-      prompt: `<p>以下為你上傳的自訂文本片段，請選出對應的卦名：</p><blockquote class="custom-excerpt">${excerpt}</blockquote>`,
+      prompt: `<p>以下為你上傳的自訂文本片段，請選出對應的卦名：</p><blockquote class="custom-excerpt">${safeExcerpt}</blockquote>`,
       options: makeOptions(correct, pool),
       answer: correct.id,
       explain: `此文本屬於「${correct.name}」卦（第${correct.id}卦）。`

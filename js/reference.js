@@ -154,8 +154,8 @@
   fileInput.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (!file) return;
+    const hex = HEXAGRAMS.find((h) => h.id === currentId) || HEXAGRAMS[0];
     if (customTexts[currentId]) {
-      const hex = HEXAGRAMS.find((h) => h.id === currentId) || HEXAGRAMS[0];
       if (!confirm(`第 ${currentId} 卦「${hex.name}」已有文本，確定要覆蓋嗎？`)) {
         fileInput.value = '';
         return;
@@ -163,7 +163,6 @@
     }
     const reader = new FileReader();
     reader.onload = (e) => {
-      const hex = HEXAGRAMS.find((h) => h.id === currentId) || HEXAGRAMS[0];
       customTexts[currentId] = {
         filename: file.name,
         content: e.target.result,
